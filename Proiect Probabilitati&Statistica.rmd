@@ -1,0 +1,782 @@
+---
+title: "Proiect Probabilitati si Statistica"
+subtitle: Băjan Ioana - Brâncoveanu Anca-Maria, grupa 242
+output:
+  word_document: default
+  pdf_document: default
+---
+
+1Problema 1
+
+Consideram distributiile: B(n, p), Pois($\lambda$), Exp($\lambda$), N($\mu$, $\sigma^2$) . Vom genera 1000 de realizari independente din fiecare repartitie si vom calcula media si varianta esantionului.
+
+```{r}
+N <- 1000
+
+# Binomiala
+p <- 0.5
+bi <- rbinom(N, size = 1, prob = p)
+
+# Poisson
+lambda <- 3
+pois <- rpois (N, lambda)
+
+# Exp
+lambda <- 3
+exp <- rexp (N, rate = lambda)
+
+# Normala
+mu <- 2
+sigmaP <- 1
+norm = rnorm (N, mean = mu, sd = sigmaP)
+
+# Calculam media si varianta
+medie_bi = mean(bi) 
+varianta_bi = var(bi)
+
+media_pois = mean(pois) 
+varianta_pois = var(pois)
+
+medie_exp = mean(exp) 
+varianta_exp = var(exp)
+
+medie_norml = mean(norm) 
+varianta_norm = var(norm)
+```
+
+\pagebreak
+
+2) Binomiala
+Ilustrati grafic functiile de masa, respectiv functiile de densitate pentru fiecare din repartitiile din
+enuntul problemei. Considerati câte 5 seturi de parametrii diferiti pentru fiecare repartitie si suprapuneti
+graficele pe aceeasi figura pentru fiecare rapetitie. Adaugati si legenda.
+
+```{r}
+nr_pct <- 80
+dimensiune <- c(70, 40, 95, 50, 80)
+probabil <- c(0.4, 0.5, 0.2, 0.3, 0.75)
+x <- seq(1, nr_pct, by = 1)
+
+# Legenda culori
+culori <- c("red", "blue", "orange", "brown", "green")
+
+fct_bin = dbinom(x, size = dimensiune[1], prob = probabil [1])
+
+plot(x, fct_bin, type = "l", lwd = 2, col = culori[1], main = "Binomiala(n, p)",
+  xlim = c(0, nr_pct), ylim = c(0, 0.15), xlab = "x", ylab = "functia de masa")
+
+for (i in seq (2, 5, by = 1))
+{
+  fct_bin  = dbinom(x, size = dimensiune[i], prob = probabil [i])
+  lines (x, fct_bin, lwd = 2, col = culori[i])
+}
+
+legend ("topright", bty = "n", legend = paste ("(n, p) = " ,
+  c("(70, 0.4)", "(40, 0.5)", "(95, 0.2)", "(50, 0.4)", "(80, 0.75)")),
+  fill = c("red", "blue", "orange", "brown", "green"),
+  cex = 0.9)
+
+grid()
+```
+\pagebreak
+
+Poisson
+
+```{r}
+nr_pct <- 100
+lamda_vct <- c(1, 4, 15, 10, 7)
+x <- seq(1, nr_pct, by = 1)
+
+# Legenda culorilor
+culori <- c("red", "blue", "orange", "brown", "green")
+
+fct_pois = dpois (x, lamda_vct[1])
+
+plot (1:nr_pct, fct_pois, type = "l", lwd = 2,  col = culori[1],
+  main = "Poisson (lambda)",
+  xlim = c(0, 35), ylim = c(0, 0.45), xlab = "x", ylab = "dpois(lambda)")
+
+for (i in seq (2, 5, by = 1))
+{
+fct_pois = dpois (x, lamda_vct[i])
+lines (1:nr_pct, fct_pois, lwd = 2, col = culori[i], type = "l")
+}
+
+legend ("topright", bty = "n", legend = paste ("lambda = ", c("1", "4", "15", "5", "7")),
+  fill = c("red", "blue", "orange", "brown", "green"),
+  cex = 0.9)
+
+grid()
+
+```
+
+\pagebreak
+
+Exponentiala
+
+```{r}
+nr_pct <- 100
+lamda_vct <- c(1, 2, 3, 0.4, 0.2)
+x <- seq(1, nr_pct, by = 0.01)
+
+# Legenda culor
+culori <- c("red", "blue", "orange", "brown", "green")
+
+fct_exp = dexp(x, rate = lamda_vct[1])
+
+plot(x, fct_exp, type = "l", lwd = 2, col = culori[1],
+  main = "Exp(lambda)",
+  xlim = c(0, 15), ylim = c(0, 0.3), xlab = "x", ylab = "dexp(lambda)")
+
+for (i in seq (2, 5, by = 1)) 
+{
+  fct_exp = dexp(x, rate = lamda_vct[i])
+  lines(x, fct_exp, lwd = 2, col = culori[i]) 
+}
+
+legend ("topright", bty = "n", legend = paste ("lambda = ", c("1", "2", "3", "0.4", "0.2")), 
+  fill = c("red", "blue", "orange", "brown", "green"),
+  cex = 0.9)
+ 
+grid()
+
+```
+
+\pagebreak
+
+Normala
+
+```{r}
+nr_pct <- 100
+mu_vct <- c (0, 8, 3, 7, 8)
+sigma_vct <- c (1, 2, 2, 3, 4)
+x <- seq(-nr_pct/8, nr_pct/4, by = .01)
+
+# Legenda culori
+culori <- c("red", "blue", "orange", "brown", "green")
+
+norm_fct <- dnorm (x, mean = mu_vct[1], sd = sigma_vct[1])
+
+plot (x, norm_fct, lwd = 2, type = "l",
+  col = culori[1],
+  main = "Functia normala (mu, sigma^2)")
+
+for (i in seq (2, 5))
+{
+  norm_fct <- dnorm (x, mean = mu_vct[i], sd = sigma_vct[i])
+  lines (x, norm_fct, type = "l", lwd = 2, col = culori[i])
+}
+
+legend ("topright", bty = "n",
+  legend = paste ("(mu, sigma^2) = ",
+  c("(0, 1)", "(8, 2)", "(3, 2)", "(7, 2)", "(8, 4)")),
+  fill = c("red", "blue", "orange", "brown", "green"),
+  cex = 0.9)
+
+grid()
+
+```
+\pagebreak
+
+3)Pentru seturile de parametrii de la punctul anterior trasati functiile de repartitie pentru fiecare repartitie (tot suprapuse) si adaugati legenda corespunzatoare.
+
+Binomiala
+
+```{r}
+nr_pct <- 80
+dimensiune <- c(100, 90, 50, 25, 95)
+probabil <- c(0.7, 0.3, 0.4, 0.4, 0.55)
+x <- seq (1, nr_pct, by = 1)
+
+# Legenda culorilor
+culori <- c("red", "blue", "orange", "brown", "green")
+
+fct_rbinom = pbinom (x, size = dimensiune[1], prob = probabil [1])
+
+plot (x, fct_rbinom, type = "l", lwd = 2, col = culori[1], main = "Functia Binomiala (n, p)",
+  xlim = c(0, nr_pct), ylim = c(0, 1.5), xlab = "x", ylab = "functia de repartitie")
+
+for (i in seq (2, 5, by = 1))
+{
+  fct_rbinom = pbinom (x, size = dimensiune[i], prob = probabil [i])
+  lines (x, fct_rbinom, lwd = 2, col = culori[i])
+}
+
+legend ("topright", bty = "n", legend = paste ("(n, p) = " ,
+  c("(100, 0.7)", "(30, 0.3)", "(50, 0.4)", "(25, 0.4)", "(95, 0.55)")),
+  fill = c("red", "blue", "orange", "brown", "green"),
+  cex = 0.9)
+
+grid()
+
+```
+
+\pagebreak
+
+Poisson
+
+```{r}
+nr_pct <- 100
+lambda_vect <- c (20, 5, 8, 14, 18)
+x <- seq (1, nr_pct, by = 1)
+
+# Legenda culorilor
+culori <- c("red", "blue", "orange", "brown", "green")
+
+fct_pois = ppois(x, lambda_vect[1])
+
+plot (1:nr_pct, fct_pois, type = "l", lwd = 2, col = culori[1],
+  main = "Functia Poisson (lambda)",
+  xlim = c(0, 50), ylim = c(0, 1.5),
+  xlab = "x", ylab = "ppois(lambda)")
+
+for (i in seq (2, 5, by = 1))
+{
+  fct_pois = ppois (x, lambda_vect[i])
+  lines (1:nr_pct, fct_pois, lwd = 2, col = culori[i], type = "l")
+}
+
+legend ("topright", bty = "n",
+  legend = paste ("lambda = ", c("20", "5", "8", "14", "18")),
+  fill = c("red", "blue", "orange", "brown", "green"),
+  cex = 0.9)
+
+grid()
+
+```
+
+\pagebreak
+
+Exponentiala
+
+```{r}
+nr_pct <- 80
+lambda_vct <- c(1, 0.6, 0.3, 0.4, 0.2)
+x <- seq(1, nr_pct, by = 0.01)
+
+# Legenda culorilor
+culori <- c("red", "blue", "orange", "brown", "green")
+
+exp_fct = pexp(x, rate = lambda_vct[1])
+
+plot (x, exp_fct, type = "l", lwd = 2, col = culori[1],
+  main = "Functia Exp (lambda)",
+  xlim = c(0, 40), ylim = c(0.7, 1.2),
+  xlab = "x", ylab = "pexp(lambda)")
+
+for (i in seq (2, 5, by = 1))
+{
+  exp_fct = pexp (x, rate = lambda_vct[i])
+  lines (x, exp_fct, lwd = 2, col = culori[i])
+}
+
+legend ("topright", bty = "n",
+  legend = paste ("lambda = ", c("1", "0.6", "0.3", "0.4", "0.2")),
+  fill = c("red", "blue", "orange", "brown", "green"),
+  cex = 0.9)
+
+grid()
+```
+
+\pagebreak
+
+Normala
+
+```{r}
+nr_pct <- 100
+mu_vct <- c (0, 2, 5, 4, 7)
+sigma_vct <- c (3, 4, 6, 3, 2)
+x <- seq(-nr_pct/8, nr_pct/4, by = .01)
+
+# Legenda culorilor
+culori <- c("red", "blue", "orange", "brown", "green")
+
+norm_fct <- pnorm (x, mean = mu_vct[1], sd = sigma_vct[1])
+
+plot (x, norm_fct, type = "l", lwd = 2, col = culori[1],
+  main = "Functia normala (mu, sigma^2)")
+
+for (i in seq (2, 5))
+{
+  norm_fct <- pnorm (x, mean = mu_vct[i], sd = sigma_vct[i])
+  lines (x, norm_fct, type = "l", lwd = 2, col = culori[i])
+}
+
+legend ("topright", bty = "n",
+  legend = paste ("(mu, sigma^2) = ",
+  c("(0, 3)", "(2, 4)", "(5, 6)", "(4, 3)", "(7, 2)")),
+  fill = c("red", "blue", "orange", "brown", "green"),
+  cex = 0.9)
+
+grid()
+```
+
+\pagebreak
+
+Aproximari ale Binomialei
+ 
+Evaluam acuratetea urmatoarelor aproximari: Poisson, Normala, Normala cu factor de corectie si Camp-Paulson. 
+ 
+```{r}
+
+factorial <- function (x)
+{
+  if (x == 0 || x == 1)
+    return (1)
+  else
+    return (x * factorial (x - 1))
+}
+
+aproxPois <- function (k, n, p)
+{
+  lamb <- n * p
+  s <- 0
+  for (x in 0:k)
+  {
+    s <- s + exp(-lamb) * lamb^x / factorial(x)
+  }
+  return (s)
+}
+
+aproxNorm <- function (k, n, p)
+{
+  return (pnorm (k, mean = n * p, sd = sqrt (n * p * (1 - p))))
+}
+
+aproxNormFactCorectie<- function (k, n, p)
+{
+# factor corectie : valuarea lui k creste cu 0.5
+  return (pnorm (k + .5, mean = n * p, sd = sqrt (n * p * (1 - p))))
+}
+
+campPaulson <- function (k, n, p)
+{
+  a <- 1 / 9*(n - k)
+  b <- 1 / (9 * (k + 1))
+  r <- ((k + 1) * (1 - p)) / (p * (n - k))
+  sigma2 <- a + b * r ^ (2 / 3)
+  mu <- 1 - a
+  c <- (1 - b) * r ^ (1 / 3)
+  
+  return (pnorm (c, mean = mu, sd = sqrt (sigma2)))
+}
+```
+
+\pagebreak
+
+```{r}
+tabel <- function (n, p)
+{
+  l <- 1:10
+  bin <- pbinom (1:10, size = n, prob = p)
+  poisson <- aproxPois (1, n, p)
+  
+  for (index in 2:10)
+  {
+  poisson <- c(poisson, aproxPois (index, n, p))
+  }
+  
+  normala <- aproxNorm(1:10, n, p)
+  norm_corectie<- aproxNormFactCorectie(1:10, n, p)
+  camp_paulson <- campPaulson(1:10, n, p)
+  
+  df <- data.frame (l, bin, poisson, normala, norm_corectie, camp_paulson)
+  
+  return (df)
+}
+
+tabel (25, 0.05)
+tabel (50, 0.05)
+tabel (100, 0.05)
+tabel (25, 0.1)
+tabel (50, 0.1)
+tabel (100, 0.1)
+
+```
+Eroarea maximala absoluta dintre doua functii de repartitii F si H
+
+```{r}
+for(set in 0:5){
+  BP <- 0
+  BN <- 0
+  BNC <- 0
+  BCP <- 0
+  for(i in 1:10){
+    if(abs(tabel[set*10+i,2] - tabel[set*10+i,3]) >= BP )
+      BP = abs(tabel[set*10+i,2] - tabel[set*10+i,3])
+    
+    if(abs(tabel[set*10+i,2] - tabel[set*10+i,4]) >= BN )
+      BN = abs(tabel[set*10+i,2] - tabel[set*10+i,4])
+    
+    if(abs(tabel[set*10+i,2] - tabel[set*10+i,5]) >= BNC )
+      BNC = abs(tabel[set*10+i,2] - tabel[set*10+i,5])
+    
+    if(abs(tabel[set*10+i,2] - tabel[set*10+i,6]) >= BCP)
+      BCP = abs(tabel[set*10+i,2] - tabel[set*10+i,6])
+  }
+  print(BP)
+  print(BN)
+  print(BNC)
+  print(BCP)
+}
+
+plot(tabel$Binomiala, type="o",col="red", main="Binomial approximations")
+lines(tabel$Poison,Type="o",col="blue")
+lines(tabel$Normala,Type="o",col="orange")
+lines(tabel$NormalaCorectie,Type="o",col="brown")
+lines(tabel$CampPaulson,Type="o",col="green")
+legend("topright",c("Binomiala","Poison","Normala","Normala Corectie", "Camp Paulson"),
+col=c("red", "blue", "orange", "brown", "green"),pch=15)
+```
+
+
+\pagebreak
+
+Problema 2
+
+Justificarea simularii vectorului
+#################ADAUGA NOTIUNI TEORETICE
+
+Metoda acceptarii si respingerii
+
+```{r}
+N <- 1000
+x <- c (runif (1, min = -1, max = 1)) 
+y <- c (runif (1, min = -1, max = 1)) 
+for (i in 2:N)
+{
+  x <- c (x, runif (1, min = -1, max = 1))
+  y <- c (y, runif (1, min = -1, max = 1)) 
+}
+plot (x, y, col = ifelse (x*x + y*y <= 1, "blue", "red"))
+```
+
+```{r}
+N <- 1000
+x <- c (runif (1, min = -1, max = 1)) 
+y <- c (runif (1, min = -1, max = 1)) 
+for (i in 2:N)
+{
+  x <- c (x, runif (1, min = -1, max = 1))
+  y <- c (y, runif (1, min = -1, max = 1)) 
+  }
+s <- 0
+n <- 0
+for (i in 1:N)
+{
+  if (x[i] * x[i] + y[i] * y[i] <= 1)
+  {
+    d <- sqrt (x[i] * x[i] + y[i] * y[i]) 
+    s <- s + d
+    n <- n + 1
+  } 
+}
+medie <- s / n
+medie
+```
+
+
+```{r}
+N <- 1000
+t <- runif (1, min = 0, max = 2*pi)
+r <- runif (1, min = 0, max = 1) 
+x <- c(r * cos (t))
+y <- c(r * sin (t))
+
+for (i in 2:N)
+{
+  t <- c(t, runif (1, min = 0, max = 2*pi))
+  r <- c(r, runif (1, min = 0, max = 1))
+  x <- c(r * cos (t))
+  y <- c(r * sin (t)) 
+}
+
+plot (x, y, col = "blue")
+circle = seq (-1, 1, by = 0.01)
+lines (circle, sqrt(1 - circle^2), col = "red") 
+lines (circle, -sqrt(1 - circle^2), col = "red")
+```
+
+
+Problema 3
+
+Construiti functia fgam care implementeaza proprietatile integralei gamma 
+
+```{r}
+factorial <- function(x)
+{
+  if(x == 0 || x == 1) return (1)
+    else return (x * factorial(x -1))
+  
+}
+
+
+fgam <- function(x)
+{
+  
+  integrand <-  function(y) {y^(x-1)*exp(1)^(-y)}
+  if (x == 0 || x == 1)
+    factorial(x-1)
+
+  else if(x == 1/2)
+    return (sqrt(pi))
+  
+  else if(x > 1)
+    return ((x-1) * fgam(x-1))
+  else if(x < 1)
+    return (integrate(integrand, lower=0, upper=Inf))
+}
+
+fbet <-function(a, b)
+{  
+  if((a+b == 1) && ((a > 0) && (b > 0))) 
+      result <- pi/(sin(a*pi))
+  else result <- (fgam(a)*fgam(b))/(fgam(a+b))
+  #result <- fbet(b, a)
+
+return(result)
+}
+
+fgam(1/3)
+gamma(1/3)
+
+fbet(1/2, 1/2)
+beta(1/2, 1/2)
+
+```
+
+\pagebreak
+c) Construiti functiile fprobgammanr, fprobbetanr si respectiv fprobnr
+```{r}
+integrand <-  function(x, a, b) {((1/((b^a) * fgam(a))) * x^(a-1) * exp(-x/b))}
+integrand2 <-  function(x, a, b) {(1/(fbet(a, b))) * x^(a-1) * (1-x)^(b-1)}
+#integrand3 <- integrand + integrand2
+
+#########1
+fprobgammanr1 <- function(a, b)
+{
+    return (integrate(integrand, lower=0, upper=3, a=a, b=b)$value)
+}
+print(fprobgammanr1(1, 2))
+print(fprobgammanr1(2, 3))
+print(fprobgammanr1(1, 2))
+
+########2
+fprobgammanr2 <- function(a, b)
+{
+    return (integrate(integrand, lower=2, upper=5, a=a, b=b)$value)
+}
+print(fprobgammanr2(1, 2))
+print(fprobgammanr2(2, 3))
+print(fprobgammanr2(1, 2))
+
+#######3
+fprobgammanr3 <- function(a, b)
+{
+  result1 <- (integrate(integrand, lower=3, upper=4, a=a, b=b)$value) 
+  result2 <- (integrate(integrand, lower=2, upper=Inf, a=a, b=b)$value)
+  return <- (result1 * result2)
+}
+
+print(fprobgammanr3(1, 2))
+print(fprobgammanr3(2, 3))
+print(fprobgammanr3(1, 2))
+ 
+#######4
+fprobbeta4 <- function(a, b)
+{return (ceiling(1-integrate(integrand2, lower=0, upper=1, a=a, b=b)$value))
+}
+print(fprobbeta4(4, 8))
+print(fprobbeta4(1, 3))
+print(fprobbeta4(5, 8))
+
+########5
+fprobbetanr5 <- function(a, b)
+{
+  return (integrate(integrand2, lower=4, upper=6, a=a, b=b)$value)
+}
+print(fprobbetanr5(4, 5))
+print(fprobbetanr5(5, 6))
+print(fprobbetanr5(4, 6))
+ 
+#######6
+fprobbetanr6 <- function(a, b)
+{
+  result1 <- (integrate(integrand2, lower=0, upper=1, a=a, b=b)$value) 
+  result2 <- (integrate(integrand2, lower=-1000000, upper=7, a=a, b=b)$value)
+  return <- (result1 * result2)
+}
+```
+
+\pagebreak
+
+```{r}
+print(fprobbetanr6(4, 5))
+print(fprobbetanr6(5, 6))
+print(fprobbetanr6(4, 6))
+
+#######7
+fprobnr7 <- function(a, b)
+{
+  result <- (integrate(((integrate(integrand, lower=0, upper=5, a=a, b=b)$value)  + (integrand2)),lower=0, upper=5, a=a, b=b)$value)
+ return (result) 
+}
+#print(fprobnr7(4, 5))
+#print(fprobnr7(5, 6))
+#print(fprobnr7(4, 6))
+
+#######8
+fprobnr8 <- function(a, b)
+{
+  result <- (integrate(((integrate(integrand, lower=0.5, upper=Inf, a=a, b=b)$value)  - (integrand2)),lower=0, upper=5, a=a, b=b)$value)
+ return (result) 
+}
+#print(fprobnr8(4, 5))
+#print(fprobnr8(5, 6))
+#print(fprobnr8(4, 6))
+
+#######9
+fprobnr9 <- function(a, b)
+{
+  result1 <- (integrate(((integrate(integrand, lower=3, upper=Inf, a=a, b=b)$value)  - (integrand2)),lower=0, upper=5, a=a, b=b)$value)
+  result2 <- (integrate(((integrate(integrand, lower=0.5, upper=Inf, a=a, b=b)$value)  - (integrand2)),lower=0, upper=5, a=a, b=b)$value)
+  return <- (result1 * result2)
+ return (result) 
+}
+#print(fprobnr9(4, 5))
+#print(fprobnr9(5, 6))
+#print(fprobnr9`(4, 6))
+
+```
+
+\pagebreak
+
+d) Calculati aceleasi probabilitati ca la punctul c) folosind functiile de sistem din R
+
+```{r}
+integrand <-  function(x, a, b) {((1/((b^a) * gamma(a))) * x^(a-1) * exp(-x/b))}
+integrand2 <-  function(x, a, b) {(1/(beta(a, b))) * x^(a-1) * (1-x)^(b-1)}
+
+#########1
+fprobgammanr21 <- function(a, b)
+{
+    return (integrate(integrand, lower=0, upper=3, a=a, b=b)$value)
+}
+print(fprobgammanr21(1, 2))
+print(fprobgammanr21(2, 3))
+print(fprobgammanr21(1, 2))
+
+########2
+fprobgammanr22 <- function(a, b)
+{
+    return (integrate(integrand, lower=2, upper=5, a=a, b=b)$value)
+}
+print(fprobgammanr22(1, 2))
+print(fprobgammanr22(2, 3))
+print(fprobgammanr22(1, 2))
+
+#######3
+fprobgammanr23 <- function(a, b)
+{
+  result1 <- (integrate(integrand, lower=3, upper=4, a=a, b=b)$value) 
+  result2 <- (integrate(integrand, lower=2, upper=Inf, a=a, b=b)$value)
+  return <- (result1 * result2)
+}
+
+print(fprobgammanr23(1, 2))
+print(fprobgammanr23(2, 3))
+print(fprobgammanr23(1, 2))
+ 
+#######4
+fprobbeta24 <- function(a, b)
+{return (ceiling(1-integrate(integrand2, lower=0, upper=1, a=a, b=b)$value))
+}
+print(fprobbeta24(4, 8))
+print(fprobbeta24(1, 3))
+print(fprobbeta24(5, 8))
+
+########5
+fprobbetanr25 <- function(a, b)
+{
+  return (integrate(integrand2, lower=4, upper=6, a=a, b=b)$value)
+}
+print(fprobbetanr25(4, 5))
+print(fprobbetanr25(5, 6))
+print(fprobbetanr25(4, 6))
+ 
+#######6
+fprobbetanr26 <- function(a, b)
+{
+  result1 <- (integrate(integrand2, lower=0, upper=1, a=a, b=b)$value) 
+  result2 <- (integrate(integrand2, lower=-1000000, upper=7, a=a, b=b)$value)
+  return <- (result1 * result2)
+}
+
+```
+
+\pagebreak
+
+```{r}
+print(fprobbetanr26(4, 5))
+print(fprobbetanr26(5, 6))
+print(fprobbetanr26(4, 6))
+
+#######7
+fprobnr27 <- function(a, b)
+{
+  result <- (integrate(((integrate(integrand, lower=0, upper=5, a=a, b=b)$value)  + (integrand2)),lower=0, upper=5, a=a, b=b)$value)
+ return (result) 
+}
+#print(fprobnr27(4, 5))
+#print(fprobnr27(5, 6))
+#print(fprobnr27(4, 6))
+
+#######8
+fprobnr28 <- function(a, b)
+{
+  result <- (integrate(((integrate(integrand, lower=0.5, upper=Inf, a=a, b=b)$value)  - (integrand2)),lower=0, upper=5, a=a, b=b)$value)
+ return (result) 
+}
+#print(fprobnr28(4, 5))
+#print(fprobnr28(5, 6))
+#print(fprobnr28(4, 6))
+
+#######9
+fprobnr29 <- function(a, b)
+{
+  result1 <- (integrate(((integrate(integrand, lower=3, upper=Inf, a=a, b=b)$value)  - (integrand2)),lower=0, upper=5, a=a, b=b)$value)
+  result2 <- (integrate(((integrate(integrand, lower=0.5, upper=Inf, a=a, b=b)$value)  - (integrand2)),lower=0, upper=5, a=a, b=b)$value)
+  return <- (result1 * result2)
+ return (result) 
+}
+#print(fprobnr29(4, 5))
+#print(fprobnr29(5, 6))
+#print(fprobnr29(4, 6))
+
+```
+
+\pagebreak
+
+```{r}
+tabel <- function (a, b)
+{
+  l <- 1:27
+ # for (index in 1:27){
+ #   punctulc <- c(fprobgammanr1, fprobgammanr2, fprobgammanr3, fprobbetanr4, fprobbetanr5, fprobbetanr6, fprobnr7, fprobnr8, fprobnr9)
+  #  punctuld <- c(fprobgammanr21, fprobgammanr22, fprobgammanr23, fprobbetanr24, fprobbetanr25, fprobbetanr26, fprobnr27, fprobnr28, fprobnr29)
+  #}
+  for (index in 1:27){
+    punctulc <- c(fprobgammanr1, fprobgammanr2, fprobgammanr3)
+    punctuld <- c(fprobgammanr21, fprobgammanr22, fprobgammanr23)
+  }
+  
+  df <- data.frame (l, punctulc, punctuld)
+  
+  return (df)
+}
+
+tabel (1, 2)
+tabel (3, 4)
+tabel (5, 6)
+
+```
